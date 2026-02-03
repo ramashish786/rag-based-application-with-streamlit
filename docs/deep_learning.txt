@@ -1,0 +1,28 @@
+Deep learning revolution
+
+How deep learning is a subset of machine learning and how machine learning is a subset of artificial intelligence (AI)
+The deep learning revolution started around CNN- and GPU-based computer vision.
+
+Although CNNs trained by backpropagation had been around for decades and GPU implementations of NNs for years,[112] including CNNs,[113] faster implementations of CNNs on GPUs were needed to progress on computer vision. Later, as deep learning becomes widespread, specialized hardware and algorithm optimizations were developed specifically for deep learning.[114]
+
+A key advance for the deep learning revolution was hardware advances, especially GPU. Some early work dated back to 2004.[112][113] In 2009, Raina, Madhavan, and Andrew Ng reported a 100M deep belief network trained on 30 Nvidia GeForce GTX 280 GPUs, an early demonstration of GPU-based deep learning. They reported up to 70 times faster training.[115]
+
+In 2011, a CNN named DanNet[116][117] by Dan Ciresan, Ueli Meier, Jonathan Masci, Luca Maria Gambardella, and Jürgen Schmidhuber achieved for the first time superhuman performance in a visual pattern recognition contest, outperforming traditional methods by a factor of 3.[9] It then won more contests.[118][119] They also showed how max-pooling CNNs on GPU improved performance significantly.[3]
+
+In 2012, Andrew Ng and Jeff Dean created an FNN that learned to recognize higher-level concepts, such as cats, only from watching unlabeled images taken from YouTube videos.[120]
+
+In October 2012, AlexNet by Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton[4] won the large-scale ImageNet competition by a significant margin over shallow machine learning methods. Further incremental improvements included the VGG-16 network by Karen Simonyan and Andrew Zisserman[121] and Google's Inceptionv3.[122]
+
+The success in image classification was then extended to the more challenging task of generating descriptions (captions) for images, often as a combination of CNNs and LSTMs.[123][124][125]
+
+In 2014, the state of the art was training "very deep neural network" with 20 to 30 layers.[126] Stacking too many layers led to a steep reduction in training accuracy,[127] known as the "degradation" problem.[128] In 2015, two techniques were developed to train very deep networks: the highway network was published in May 2015, and the residual neural network (ResNet)[129] in Dec 2015. ResNet behaves like an open-gated Highway Net.
+
+Around the same time, deep learning started impacting the field of art. Early examples included Google DeepDream (2015), and neural style transfer (2015),[130] both of which were based on pretrained image classification neural networks, such as VGG-19.
+
+Generative adversarial network (GAN) by (Ian Goodfellow et al., 2014)[131] (based on Jürgen Schmidhuber's principle of artificial curiosity[74][76]) became state of the art in generative modeling during 2014-2018 period. Excellent image quality is achieved by Nvidia's StyleGAN (2018)[132] based on the Progressive GAN by Tero Karras et al.[133] Here the GAN generator is grown from small to large scale in a pyramidal fashion. Image generation by GAN reached popular success, and provoked discussions concerning deepfakes.[134] Diffusion models (2015)[135] eclipsed GANs in generative modeling since then, with systems such as DALL·E 2 (2022) and Stable Diffusion (2022).
+
+In 2015, Google's speech recognition improved by 49% by an LSTM-based model, which they made available through Google Voice Search on smartphone.[136][137]
+
+Deep learning is part of state-of-the-art systems in various disciplines, particularly computer vision and automatic speech recognition (ASR). Results on commonly used evaluation sets such as TIMIT (ASR) and MNIST (image classification), as well as a range of large-vocabulary speech recognition tasks have steadily improved.[104][138] Convolutional neural networks were superseded for ASR by LSTM.[137][139][140][141] but are more successful in computer vision.
+
+Yoshua Bengio, Geoffrey Hinton and Yann LeCun were awarded the 2018 Turing Award for "conceptual and engineering breakthroughs that have made deep neural networks a critical component of computing".[142]
