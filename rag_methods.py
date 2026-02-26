@@ -2,20 +2,22 @@ import os
 import dotenv
 from time import time
 import streamlit as st
+from pathlib import Path
 
+from langchain_core.messages import AIMessage, HumanMessage
 from langchain_community.document_loaders.text import TextLoader
 from langchain_community.document_loaders import (
     WebBaseLoader, 
     PyPDFLoader, 
     Docx2txtLoader,
 )
-# pip install docx2txt, pypdf
 from langchain_community.vectorstores import Chroma
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI,AzureOpenAIEmbeddings
+from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 
 dotenv.load_dotenv()
 
@@ -144,14 +146,26 @@ def _split_and_load_docs(docs):
 
 def _get_context_retriever_chain(vector_db, llm):
     retriever = vector_db.as_retriever()
+    
+    # Create history-aware retriever using LCEL
+    # This replaces: create_history_aware_retriever(llm, retriever, prompt)
+    
     prompt = ChatPromptTemplate.from_messages([
         MessagesPlaceholder(variable_name="messages"),
         ("user", "{input}"),
-        ("user", "Given the above conversation, generate a search query to look up in order to get inforamtion relevant to the conversation, focusing on the most recent messages."),
+        ("user", "Given the above conversation, generate a search query to look up in order to get information relevant to the conversation, focusing on the most recent messages."),
     ])
-    retriever_chain = create_history_aware_retriever(llm, retriever, prompt)
-
-    return retriever_chain
+    
+    # LCEL version of history-aware retriever
+    history_aware_retriever_chain = (
+        RunnablePassthrough.assign(
+            # Generate search query based on conversation
+            search_query=prompt | llm | StrOutputParser()
+        )
+        | (lambda x: retriever.invoke(x["search_query"]))
+    )
+    
+    return history_aware_retriever_chain
 
 
 def get_conversational_rag_chain(llm):
@@ -160,15 +174,32 @@ def get_conversational_rag_chain(llm):
     prompt = ChatPromptTemplate.from_messages([
         ("system",
         """You are a helpful assistant. You will have to answer to user's queries.
-        You will have some context to help with your answers, but now always would be completely related or helpful.
+        You will have some context to help with your answers, but not always would be completely related or helpful.
         You can also use your knowledge to assist answering the user's queries.\n
         {context}"""),
         MessagesPlaceholder(variable_name="messages"),
         ("user", "{input}"),
     ])
-    stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
-
-    return create_retrieval_chain(retriever_chain, stuff_documents_chain)
+    
+    # LCEL version - replaces create_stuff_documents_chain and create_retrieval_chain
+    # Create document chain (equivalent to create_stuff_documents_chain)
+    document_chain = prompt | llm | StrOutputParser()
+    
+    # Create retrieval chain (equivalent to create_retrieval_chain)
+    retrieval_chain = (
+        RunnableParallel(
+            {
+                "context": retriever_chain,
+                "input": lambda x: x["input"],
+                "messages": lambda x: x["messages"]
+            }
+        )
+        | RunnablePassthrough.assign(
+            answer=document_chain
+        )
+    )
+    
+    return retrieval_chain
 
 
 def stream_llm_rag_response(llm_stream, messages):
