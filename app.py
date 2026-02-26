@@ -13,7 +13,7 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, HumanMessage
 
-from rag_methods_new import (
+from rag_methods import (
     load_doc_to_db, 
     load_url_to_db,
     stream_llm_response,

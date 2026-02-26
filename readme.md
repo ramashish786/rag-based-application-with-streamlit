@@ -17,3 +17,5 @@ $ pip install -r requirements.txt
 
 $ streamlit run app.py
 ```
+<img src="./images/1.jpg" alt="Project Screenshot" width="400" height="200">
+<img src="./images/2.jpg" alt="Project Screenshot" width="400" height="200">
